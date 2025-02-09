@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kochi Metro - Work Access Permit</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --bg-color: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --shadow-sm: 0 2px 8px rgba(99,102,241,0.1);
+            --shadow-md: 0 4px 16px rgba(99,102,241,0.15);
+            --shadow-lg: 0 8px 24px rgba(99,102,241,0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out;
+            position: relative;
+        }
+
+        /* Modified header styles */
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .header:hover {
+            transform: translateY(-2px);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .header-title {
+            text-align: left;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .header-title h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .header:hover .header-title h1 {
+            transform: scale(1.02);
+        }
+
+        /* Interactive background elements */
+        .header-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255,255,255,0.15) 0%, transparent 50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .header:hover .header-bg {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .header-title {
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 2rem;
+            }
+
+            .header-title h2 {
+                font-size: 1rem;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+
+        .form-container {
+            padding: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        .span-3 {
+            grid-column: span 3;
+        }
+
+        .declaration-section {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .declaration-text {
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .work-type-selection {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .work-type-label {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .work-type-label:has(input:checked) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .signature-area {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin: 3rem 0;
+            padding: 2.5rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .signature-box {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .signature-box:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .signature-line {
+            height: 2px;
+            background: var(--primary);
+            margin: 1.5rem 0;
+        }
+
+        .form-footer {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            padding: 2.5rem 3rem;
+            margin-top: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .form-footer h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-footer button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-footer button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 50%);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .form-footer button:hover::after {
+            opacity: 1;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            color: var(--accent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .form-group.invalid .validation-message {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            body { 
+                padding: 0; 
+            }
+            .container { 
+                border-radius: 0; 
+            }
+            .header-content { 
+                flex-direction: column; 
+                text-align: center; 
+            }
+            .form-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .signature-area { 
+                grid-template-columns: 1fr; 
+            }
+            .form-footer { 
+                flex-direction: column; 
+                text-align: center;
+                gap: 2rem;
+            }
+            .span-2, .span-3 {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-bg"></div>
+            <div class="header-content">
+                <img src="KMRL-logo.png" alt="Kochi Metro Logo" class="logo">
+                <div class="header-title">
+                    <h1>KOCHI METRO RAIL LTD</h1>
+                    <h2>Work Access Permit</h2>
+                </div>
+            </div>
+        </div>
+
+        <form class="form-container">
+            <h3 class="section-title">PART-1: Request for Work in KMRL</h3>
+            <p style="color: var(--text-light); font-size: 0.9rem">(To be submitted at least 24 hrs prior to work)</p>
+
+            <div class="form-grid">
+                <div class="form-group span-2">
+                    <label for="licensee">Name of Licensee</label>
+                    <input type="text" id="licensee" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loa">LOA NO.</label>
+                    <input type="text" id="loa" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="office_no">Office No.</label>
+                    <input type="tel" id="office_no" required>
+                </div>
+
+                <div class="form-group span-2">
+                    <label for="official">Name & Designation of Official</label>
+                    <input type="text" id="official" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="official_mobile">Mobile Phone No.</label>
+                    <input type="tel" id="official_mobile" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="scope">Scope of Business</label>
+                    <input type="text" id="scope" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="station">Proposed Station</label>
+                    <input type="text" id="station" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Proposed Location</label>
+                    <input type="text" id="location" required>
+                </div>
+
+                <div class="form-group span-3">
+                    <label for="description">Description of Civil Work</label>
+                    <textarea id="description" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group span-2">
+                    <label for="duration">Proposed Date / No. of days</label>
+                    <input type="text" id="duration" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tools">Details of tools</label>
+                    <input type="text" id="tools" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="competent_sup">Name of Competent Supervisor</label>
+                    <input type="text" id="competent_sup" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sup_mobile">Supervisor Mobile No.</label>
+                    <input type="tel" id="sup_mobile" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="competent_eng">Name of Competent Engineer</label>
+                    <input type="text" id="competent_eng" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="eng_mobile">Engineer Mobile No.</label>
+                    <input type="tel" id="eng_mobile" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workers">No. of workers</label>
+                    <input type="number" id="workers" required>
+                </div>
+
+                <div class="form-group span-2">
+                    <label for="attachments">Copy of IDs attached</label>
+                    <input type="file" id="attachments" multiple accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+            </div>
+
+            <div class="declaration-section">
+                <h3 class="section-title">Declaration</h3>
+                <p class="declaration-text">
+                    I, on behalf of the above firm, hereby take the full responsibility of the proposed works and also the safety of our workers, supervisors and the people who could be affected due to works. Certified that the deputed workforce is qualified and competent for the assigned job with personal protection equipment (PPE to be arranged by the vendor). Read and accepted the "Instructions to the vendor" mentioned at Annexure-1.
+                </p>
+                
+                <p class="declaration-text">
+                    The request for work as above has been verified with the conditions of contract. May be permitted to take up works by the Authorized representative with Emp No. & Desg. with duly following the takeover work area & supervising process.
+                </p>
+
+                <div class="authorized-entry">
+                    <div class="form-group">
+                        <label for="auth_name1">Name & Designation of Authorized Representative 1</label>
+                        <input type="text" id="auth_name1" required placeholder="Name - Designation">
+                    </div>
+                    <div class="form-group">
+                        <label for="auth_name2">Name & Designation of Authorized Representative 2</label>
+                        <input type="text" id="auth_name2" required placeholder="Name - Designation">
+                    </div>
+                </div>
+
+                <div class="work-type-selection">
+                    <span>As per the extant rule of:</span>
+                    <label class="work-type-label">
+                        <input type="checkbox" name="workMode" value="wap"> WAP
+                    </label>
+                    <label class="work-type-label">
+                        <input type="checkbox" name="workMode" value="jobCard"> JOB CARD
+                    </label>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <label>Signature of KMRL contract manager</label>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <label>NAME</label>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <label>DEPARTMENT</label>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <div>
+                    <h3>Kochi Metro Rail LTD</h3>
+                    <p>O&M Division</p>
+                </div>
+                <button type="submit">Submit Application</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form Validation
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', (e) => {
+                const formGroup = e.target.closest('.form-group');
+                if (e.target.required && e.target.value.trim() === '') {
+                    formGroup.classList.add('invalid');
+                    formGroup.classList.remove('valid');
+                    
+                    if (!formGroup.querySelector('.validation-message')) {
+                        const message = document.createElement('div');
+                        message.className = 'validation-message';
+                        message.textContent = 'This field is required';
+                        formGroup.appendChild(message);
+                    }
+                } else {
+                    formGroup.classList.remove('invalid');
+                    formGroup.classList.add('valid');
+                }
+            });
+
+            input.addEventListener('focus', (e) => {
+                const formGroup = e.target.closest('.form-group');
+                formGroup.classList.add('focused');
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form Submission
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            let isValid = true;
+            inputs.forEach(input => {
+                if (input.required && input.value.trim() === '') {
+                    isValid = false;
+                    input.closest('.form-group').classList.add('invalid');
+                }
+            });
+
+            if (isValid) {
+                const button = e.target.querySelector('button[type="submit"]');
+                button.textContent = 'Submitting...';
+                button.disabled = true;
+                
+                setTimeout(() => {
+                    button.textContent = 'Submitted Successfully!';
+                    button.style.background = 'var(--success)';
+                    
+                    setTimeout(() => {
+                        button.textContent = 'Submit Application';
+                        button.disabled = false;
+                        button.style.background = 'var(--accent)';
+                    }, 2000);
+                }, 1500);
+            }
+        });
+
+        // Signature Box Interaction
+        document.querySelectorAll('.signature-box').forEach(box => {
+            box.addEventListener('click', () => {
+                box.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    box.style.transform = 'translateY(-4px)';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
