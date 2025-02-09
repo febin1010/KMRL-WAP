@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Access Permit Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu-bar {
+            background-color: #333;
+            overflow: hidden;
+            padding: 15px;
+            text-align: center;
+        }
+        .menu-bar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+        }
+        .menu-bar a:hover {
+            background-color: #575757;
+            border-radius: 4px;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+        canvas {
+            display: block;
+            margin: 20px auto;
+            max-width: 90%;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <a href="#">Dashboard</a>
+        <a href="#">Create WAP</a>
+        <a href="#">Edit WAP</a>
+        <a href="#">Logout</a>
+    </div>
+    
+    <div class="container">
+        <h2>Work Access Permit Dashboard</h2>
+        
+        <h3>Permit Overview</h3>
+        <table id="permitTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Submitted On</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Engineering</td><td>Pending</td><td>2025-02-09</td></tr>
+                <tr><td>2</td><td>HR</td><td>Approved</td><td>2025-02-08</td></tr>
+                <tr><td>3</td><td>IT</td><td>In Progress</td><td>2025-02-07</td></tr>
+            </tbody>
+        </table>
+        
+        <h3>Permits by Department</h3>
+        <canvas id="departmentChart"></canvas>
+
+        <h3>Permit Status Distribution</h3>
+        <canvas id="statusChart"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#permitTable').DataTable();
+        });
+
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        new Chart(departmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Engineering', 'HR', 'IT'],
+                datasets: [{
+                    label: 'Permits',
+                    data: [5, 3, 7],
+                    backgroundColor: ['blue', 'green', 'orange']
+                }]
+            }
+        });
+
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Approved', 'In Progress'],
+                datasets: [{
+                    data: [4, 5, 6],
+                    backgroundColor: ['red', 'green', 'yellow']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
