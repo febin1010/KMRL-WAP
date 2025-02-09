@@ -537,83 +537,88 @@
         </form>
     </div>
 
-    <script>
-        // Form Validation
-        const inputs = document.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('blur', (e) => {
-                const formGroup = e.target.closest('.form-group');
-                if (e.target.required && e.target.value.trim() === '') {
-                    formGroup.classList.add('invalid');
-                    formGroup.classList.remove('valid');
-                    
-                    if (!formGroup.querySelector('.validation-message')) {
-                        const message = document.createElement('div');
-                        message.className = 'validation-message';
-                        message.textContent = 'This field is required';
-                        formGroup.appendChild(message);
-                    }
-                } else {
-                    formGroup.classList.remove('invalid');
-                    formGroup.classList.add('valid');
+<script>
+    // Form Validation
+    const inputs = document.querySelectorAll('input, textarea, select');
+    const excludedFields = ['scope_of_business', 'loa_no', 'office_no', 'details_of_tools'];
+
+    inputs.forEach(input => {
+        input.addEventListener('blur', (e) => {
+            const formGroup = e.target.closest('.form-group');
+            if (e.target.required && e.target.value.trim() === '' && !excludedFields.includes(e.target.name)) {
+                formGroup.classList.add('invalid');
+                formGroup.classList.remove('valid');
+
+                if (!formGroup.querySelector('.validation-message')) {
+                    const message = document.createElement('div');
+                    message.className = 'validation-message';
+                    message.textContent = 'This field is required';
+                    formGroup.appendChild(message);
                 }
-            });
-
-            input.addEventListener('focus', (e) => {
-                const formGroup = e.target.closest('.form-group');
-                formGroup.classList.add('focused');
-            });
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Form Submission
-        document.querySelector('form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            let isValid = true;
-            inputs.forEach(input => {
-                if (input.required && input.value.trim() === '') {
-                    isValid = false;
-                    input.closest('.form-group').classList.add('invalid');
-                }
-            });
-
-            if (isValid) {
-                const button = e.target.querySelector('button[type="submit"]');
-                button.textContent = 'Submitting...';
-                button.disabled = true;
-                
-                setTimeout(() => {
-                    button.textContent = 'Submitted Successfully!';
-                    button.style.background = 'var(--success)';
-                    
-                    setTimeout(() => {
-                        button.textContent = 'Submit Application';
-                        button.disabled = false;
-                        button.style.background = 'var(--accent)';
-                    }, 2000);
-                }, 1500);
+            } else {
+                formGroup.classList.remove('invalid');
+                formGroup.classList.add('valid');
+                const validationMessage = formGroup.querySelector('.validation-message');
+                if (validationMessage) validationMessage.remove();
             }
         });
 
-        // Signature Box Interaction
-        document.querySelectorAll('.signature-box').forEach(box => {
-            box.addEventListener('click', () => {
-                box.style.transform = 'scale(1.02)';
-                setTimeout(() => {
-                    box.style.transform = 'translateY(-4px)';
-                }, 200);
+        input.addEventListener('focus', (e) => {
+            const formGroup = e.target.closest('.form-group');
+            formGroup.classList.add('focused');
+        });
+    });
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
             });
         });
-    </script>
+    });
+
+    // Form Submission
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let isValid = true;
+        inputs.forEach(input => {
+            if (input.required && input.value.trim() === '' && !excludedFields.includes(input.name)) {
+                isValid = false;
+                input.closest('.form-group').classList.add('invalid');
+            }
+        });
+
+        if (isValid) {
+            const button = e.target.querySelector('button[type="submit"]');
+            button.textContent = 'Submitting...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.textContent = 'Submitted Successfully!';
+                button.style.background = 'var(--success)';
+
+                setTimeout(() => {
+                    button.textContent = 'Submit Application';
+                    button.disabled = false;
+                    button.style.background = 'var(--accent)';
+                }, 2000);
+            }, 1500);
+        }
+    });
+
+    // Signature Box Interaction
+    document.querySelectorAll('.signature-box').forEach(box => {
+        box.addEventListener('click', () => {
+            box.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                box.style.transform = 'translateY(-4px)';
+            }, 200);
+        });
+    });
+</script>
+
 </body>
 </html>
