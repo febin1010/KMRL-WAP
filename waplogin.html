@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Permit Portal | Admin Sign In</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <link rel="stylesheet" href="waploginstyle.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="/" class="logo">
+                    <img src="KMRL-logo.png" alt="Company Logo">
+                </a>
+                <div class="portal-title">
+                    <h1>WORK ACCESS PERMIT PORTAL</h1>
+                    <h2>SECURE AUTHENTICATION SYSTEM</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Please sign in to access your portal</p>
+            </div>
+            <form id="loginForm" action="process_login.php" method="post">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-container">
+                        <i data-lucide="mail" class="input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-container">
+                        <i data-lucide="lock" class="input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button 
+                            type="button" 
+                            class="password-toggle" 
+                            aria-label="Toggle password visibility"
+                            onclick="togglePassword()"
+                        >
+                            <i data-lucide="eye" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                    <div class="error-message">Invalid password format</div>
+                </div>
+                <button type="submit" class="submit-btn">
+                    Sign In
+                </button>
+                <div class="success-message">Successfully logged in!</div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://kochimetro.org/privacy-policy/">Privacy Policy</a>
+                <a href="https://kochimetro.org/contact-us/">Contact Support</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Access Permit Portal. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passwordInput.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        // Form submission handling with loading state
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const button = document.getElementById('submitButton');
+            button.classList.add('loading');
+            
+            // Simulate API call
+            setTimeout(() => {
+                button.classList.remove('loading');
+                document.querySelector('.success-message').style.display = 'block';
+            }, 2000);
+        });
+
+        // Input validation
+        document.getElementById('password').addEventListener('input', function(e) {
+            const errorMessage = document.querySelector('.error-message');
+            if (this.value.length < 8) {
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
