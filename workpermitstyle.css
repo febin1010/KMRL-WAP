@@ -23,9 +23,9 @@
 body {
     background: var(--bg-color);
     min-height: 100vh;
-    padding: 2rem;
+    padding: 0;
     color: var(--text-dark);
-}
+} 
 
 .container {
     max-width: 1200px;
