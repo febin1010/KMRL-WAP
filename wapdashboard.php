@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    // Redirect to login page if session doesn't exist
+    header("Location: waplogin.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,13 +58,20 @@
             </nav>
             
             <div class="mt-auto">
-                <button onclick="showPage('logout')" class="flex items-center w-full p-3 hover:bg-red-700 rounded-lg transition-all group text-red-400 hover:text-white">
+                <button onclick="logoutUser()" class="flex items-center w-full p-3 hover:bg-red-700 rounded-lg transition-all group text-red-400 hover:text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     Logout
                 </button>
             </div>
+            
+            <script>
+                function logoutUser() {
+                    window.location.href = 'logout.php'; // Redirects to logout.php to destroy session and log out
+                }
+            </script>
+            
         </div>
 
         <!-- Main Content Area -->
@@ -397,19 +412,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Logout Page (Simple message) -->
-            <div id="logout" class="page hidden">
-                <div class="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-                    <div class="bg-white p-8 rounded-lg shadow-2xl text-center">
-                        <h1 class="text-4xl font-bold mb-4 text-gray-800">Logged Out</h1>
-                        <p class="text-gray-600 mb-6">You have been successfully logged out.</p>
-                        <button onclick="window.location.reload()" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                            Log In Again
-                        </button>
                     </div>
                 </div>
             </div>

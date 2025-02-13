@@ -173,6 +173,7 @@ main {
 
 .password-toggle {
     border: none;
+    background: transparent;
     cursor: pointer;
     position: absolute;
     right: 10px;

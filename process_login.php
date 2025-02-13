@@ -1,44 +1,45 @@
 <?php
 session_start();
-require 'db_connection.php'; // Include database connection
+require 'db_connection.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $user_id = trim($_POST['email']); // Assuming email is the user_id
-    $password = trim($_POST['password']);
+header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    if (empty($user_id) || empty($password)) {
-        $_SESSION['error'] = "All fields are required.";
-        header("Location: login.php");
+// Ensure the request is POST
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    echo json_encode(["success" => false, "message" => "Invalid request method."]);
+    exit();
+}
+
+// Get input values
+$user_id = trim($_POST['email'] ?? '');
+$password = trim($_POST['password'] ?? '');
+
+if (empty($user_id) || empty($password)) {
+    echo json_encode(["success" => false, "message" => "All fields are required."]);
+    exit();
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT id, user_id, password FROM adminlogin WHERE user_id = :user_id");
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($admin && password_verify($password, $admin['password'])) {
+        $_SESSION['admin_id'] = $admin['id'];
+        $_SESSION['user_id'] = $admin['user_id'];
+
+        echo json_encode(["success" => true, "redirect" => "wapdashboard.php"]);
+        exit();
+    } else {
+        echo json_encode(["success" => false, "message" => "Invalid USER-ID or password."]);
         exit();
     }
-
-    try {
-        // Fetch the admin record by user_id (email)
-        $stmt = $pdo->prepare("SELECT id, user_id, password FROM adminlogin WHERE user_id = :user_id");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Check if the user exists and verify password
-        if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['admin_id'] = $admin['id'];
-            $_SESSION['user_id'] = $admin['user_id'];
-
-            header("Location: wapdashboard.html"); // Redirect to admin dashboard
-            exit();
-        } else {
-            $_SESSION['error'] = "Invalid email or password.";
-            header("Location: waplogin.html");
-            exit();
-        }
-    } catch (PDOException $e) {
-        error_log("Login Error: " . $e->getMessage());
-        $_SESSION['error'] = "Something went wrong. Try again later.";
-        header("Location: waplogin.html");
-        exit();
-    }
-} else {
-    header("Location: waplogin.html");
+} catch (PDOException $e) {
+    error_log("Login Error: " . $e->getMessage());
+    echo json_encode(["success" => false, "message" => "Something went wrong. Try again later."]);
     exit();
 }
 ?>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Permit Portal | Admin Sign In</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="waploginstyle.css">
 </head>
 <body>
@@ -32,7 +32,6 @@
                 <div class="form-group">
                     <label for="email">USER-ID</label>
                     <div class="input-container">
-                        <i data-lucide="mail" class="input-icon"></i>
                         <input 
                             id="email" 
                             name="email" 
@@ -45,14 +44,14 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="input-container">
-                        <i data-lucide="lock" class="input-icon"></i>
                         <input 
                             type="password" 
                             id="password" 
                             name="password" 
                             placeholder="Enter your password"
                             required
-                            autocomplete="current-password"
+                            autocomplete="off"
+                            value=""
                         >
                         <button 
                             type="button" 
@@ -60,12 +59,12 @@
                             aria-label="Toggle password visibility"
                             onclick="togglePassword()"
                         >
-                            <i data-lucide="eye" id="passwordToggleIcon"></i>
+                            <i id="passwordToggleIcon" data-lucide="eye"></i>   
                         </button>
                     </div>
                     <div class="error-message">Invalid password format</div>
                 </div>                
-                <button type="submit" class="submit-btn">
+                <button type="submit" class="submit-btn" id="submitButton">
                     Sign In
                 </button>
                 <div class="success-message">Successfully logged in!</div>
@@ -86,47 +85,81 @@
     </footer>
 
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+// Initialize Lucide icons
+lucide.createIcons();
 
-        // Password visibility toggle
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const icon = document.getElementById('passwordToggleIcon');
+// Password visibility toggle
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('passwordToggleIcon');
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                passwordInput.type = 'password';
-                icon.setAttribute('data-lucide', 'eye');
-            }
-            
-            // Reinitialize icons to reflect changes
-            lucide.createIcons();
-        }
-        // Form submission handling with loading state
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const button = document.getElementById('submitButton');
-            button.classList.add('loading');
-            
-            // Simulate API call
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+        passwordInput.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+    }
+
+    // Reinitialize icons to reflect changes
+    lucide.createIcons();
+}
+
+// Handle form submission
+async function handleLogin(event) {
+    event.preventDefault();
+    const button = document.getElementById('submitButton');
+    const passwordField = document.getElementById('password');
+    const successMessage = document.querySelector('.success-message');
+    const errorMessage = document.querySelector('.error-message');
+
+    // Reset messages
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+
+    // Check password format after form submission
+    if (passwordField.value.length < 5) {
+        errorMessage.style.display = 'block';
+        return;
+    }
+
+    button.classList.add('loading');
+
+    // Collect form data
+    const formData = new FormData(event.target);
+
+    try {
+        // Send form data to process_login.php
+        const response = await fetch('process_login.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json(); 
+
+        if (result.success) {
+            successMessage.style.display = 'block';
+
+            // Clear password field
+            passwordField.value = '';
+
+            // Hide success message after a delay and redirect
             setTimeout(() => {
-                button.classList.remove('loading');
-                document.querySelector('.success-message').style.display = 'block';
-            }, 2000);
-        });
+                successMessage.style.display = 'none';
+                window.location.href = 'wapdashboard.php';
+            }, 1000);
+        } else {
+            alert(result.message || 'Invalid credentials. Please try again.');
+        }
+    } catch (error) {
+        alert('An error occurred. Please try again.');
+        console.error('Login error:', error);
+    }
 
-        // Input validation
-        document.getElementById('password').addEventListener('input', function(e) {
-            const errorMessage = document.querySelector('.error-message');
-            if (this.value.length < 8) {
-                errorMessage.style.display = 'block';
-            } else {
-                errorMessage.style.display = 'none';
-            }
-        });
+    button.classList.remove('loading');
+}
+
+document.getElementById('loginForm').addEventListener('submit', handleLogin);
     </script>
 </body>
 </html>
