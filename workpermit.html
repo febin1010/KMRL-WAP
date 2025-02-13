@@ -208,33 +208,23 @@
     });
 
     // Form Submission
-    document.querySelector('form').addEventListener('submit', (e) => {
-        e.preventDefault();
+    document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-        let isValid = true;
-        inputs.forEach(input => {
-            if (input.required && input.value.trim() === '' && !excludedFields.includes(input.name)) {
-                isValid = false;
-                input.closest('.form-group').classList.add('invalid');
-            }
-        });
+    let formData = new FormData(this);
 
-        if (isValid) {
-            const button = e.target.querySelector('button[type="submit"]');
-            button.textContent = 'Submitting...';
-            button.disabled = true;
-
-            setTimeout(() => {
-                button.textContent = 'Submitted Successfully!';
-                button.style.background = 'var(--success)';
-
-                setTimeout(() => {
-                    button.textContent = 'Submit Application';
-                    button.disabled = false;
-                    button.style.background = 'var(--accent)';
-                }, 2000);
-            }, 1500);
+    fetch("submit_work_permit.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        if (data.status === "success") {
+            document.querySelector("form").reset();
         }
+    })
+    .catch(error => console.error("Error:", error));
     });
 
     // Signature Box Interaction
