@@ -165,78 +165,90 @@
         </form>
     </div>
 
-<script>
-    // Form Validation
-    const inputs = document.querySelectorAll('input, textarea, select');
-    const excludedFields = ['scope_of_business', 'loa_no', 'office_no', 'details_of_tools'];
-
-    inputs.forEach(input => {
-        input.addEventListener('blur', (e) => {
-            const formGroup = e.target.closest('.form-group');
-            if (e.target.required && e.target.value.trim() === '' && !excludedFields.includes(e.target.name)) {
-                formGroup.classList.add('invalid');
-                formGroup.classList.remove('valid');
-
-                if (!formGroup.querySelector('.validation-message')) {
-                    const message = document.createElement('div');
-                    message.className = 'validation-message';
-                    message.textContent = 'This field is required';
-                    formGroup.appendChild(message);
+    <script>
+        // Form Validation
+        const inputs = document.querySelectorAll('input, textarea, select');
+        const excludedFields = ['scope_of_business', 'loa_no', 'office_no', 'details_of_tools'];
+    
+        inputs.forEach(input => {
+            input.addEventListener('blur', (e) => {
+                const formGroup = e.target.closest('.form-group');
+                if (!formGroup) return; // Prevents error if no .form-group exists
+    
+                if (e.target.required && e.target.value.trim() === '' && !excludedFields.includes(e.target.name)) {
+                    formGroup.classList.add('invalid');
+                    formGroup.classList.remove('valid');
+    
+                    if (!formGroup.querySelector('.validation-message')) {
+                        const message = document.createElement('div');
+                        message.className = 'validation-message';
+                        message.textContent = 'This field is required';
+                        formGroup.appendChild(message);
+                    }
+                } else {
+                    formGroup.classList.remove('invalid');
+                    formGroup.classList.add('valid');
+                    const validationMessage = formGroup.querySelector('.validation-message');
+                    if (validationMessage) validationMessage.remove();
                 }
-            } else {
-                formGroup.classList.remove('invalid');
-                formGroup.classList.add('valid');
-                const validationMessage = formGroup.querySelector('.validation-message');
-                if (validationMessage) validationMessage.remove();
-            }
-        });
-
-        input.addEventListener('focus', (e) => {
-            const formGroup = e.target.closest('.form-group');
-            formGroup.classList.add('focused');
-        });
-    });
-
-    // Smooth Scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
+            });
+    
+            input.addEventListener('focus', (e) => {
+                const formGroup = e.target.closest('.form-group');
+                if (formGroup) formGroup.classList.add('focused'); // Ensures formGroup exists
             });
         });
-    });
-
-    // Form Submission
-    document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch("submit_work_permit.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        if (data.status === "success") {
-            document.querySelector("form").reset();
-        }
-    })
-    .catch(error => console.error("Error:", error));
-    });
-
-    // Signature Box Interaction
-    document.querySelectorAll('.signature-box').forEach(box => {
-        box.addEventListener('click', () => {
-            box.style.transform = 'scale(1.02)';
-            setTimeout(() => {
-                box.style.transform = 'translateY(-4px)';
-            }, 200);
+    
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
         });
-    });
-</script>
+    
+        // Form Submission
+        document.querySelector("form").addEventListener("submit", function (e) {
+            e.preventDefault();
+    
+            let formData = new FormData(this);
+    
+            fetch("submit_work_permit.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text()) // First, get the response as text
+            .then(text => {
+                try {
+                    return JSON.parse(text); // Try parsing JSON
+                } catch (error) {
+                    console.error("Invalid JSON response:", text); // Log if not JSON
+                    throw new Error("Server returned invalid response.");
+                }
+            })
+            .then(data => {
+                alert(data.message);
+                if (data.status === "success") {
+                    document.querySelector("form").reset();
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    
+        // Signature Box Interaction
+        document.querySelectorAll('.signature-box').forEach(box => {
+            box.addEventListener('click', () => {
+                box.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    box.style.transform = 'translateY(-4px)';
+                }, 200);
+            });
+        });
+    </script>
+    
 
 </body>
 </html>
